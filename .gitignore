@@ -1,0 +1,4 @@
+.*
+*.exe
+vendor/golang.org
+!.gitignore
