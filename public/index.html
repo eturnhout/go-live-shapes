@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Live Shapes</title>
+        <style>
+            body {
+                width: 100%;
+                background: pink;
+            }
+
+            .square {
+                width: 2.5em;
+                height: 2.5em;
+                background-color: red;
+            }
+
+            .triangle {
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-width: 0 2em 2.7em 2em;
+                border-color: transparent transparent #007bff transparent;
+            }
+
+            .circle {
+                border-radius: 50%;
+                width: 3em;
+                height: 3em;
+                background-color: yellow;
+            }
+
+            .diamond {
+                width: 3em;
+                height: 3em;
+                background-color: blue;
+                margin: 0.5em;
+            /* Rotate */
+                -webkit-transform: rotate(-45deg);
+                -moz-transform: rotate(-45deg);
+                -ms-transform: rotate(-45deg);
+                -o-transform: rotate(-45deg);
+                transform: rotate(-45deg);
+            }
+        </style>
+    </head>
+    <body>
+        <div id="square" class="square">
+        </div>
+
+        <div id="triangle" class="triangle">
+        </div>
+
+        <div id="circle" class="circle">
+        </div>
+
+        <div id="diamond" class="diamond">
+        </div>
+
+        <script type="text/javascript">
+            var shapes = ['square', 'triangle', 'circle', 'diamond'];
+            var offx;
+            var offy;
+            var websocket;
+
+            window.onload = initApp(shapes);
+
+            // Initialize the websocket and makes all shapes in the shapes array dragable.
+            function initApp(shapes) {
+                websocket = new WebSocket("ws://localhost:8080/stream");
+
+                websocket.onopen = (e => {
+                    console.log("connected");
+                });
+
+                websocket.onclose = (response => {
+                    alert("Connection to the server closed.")
+                });
+
+                websocket.onmessage = (response => {
+                    updateShape(JSON.parse(response.data));
+                });
+
+                websocket.onerror = (response => {
+                    alert("An error occurred.");
+                });
+
+                for (i = 0; i < shapes.length; i++) {
+                    document.getElementById(shapes[i]).addEventListener('mousedown', mouseDown, false);
+                    window.addEventListener('mouseup', mouseUp, false);
+                }
+            }
+
+            // Removes the divMove event from the mousemove listener.
+            function mouseUp() {
+                window.removeEventListener('mousemove', divMove, true);
+            }
+
+            // Gets the y & x offsets and adds the divMove event to the mousemove listener.
+            function mouseDown(e){
+                var div = document.getElementById(e.srcElement.id);
+                offY= e.clientY-parseInt(div.offsetTop);
+                offX= e.clientX-parseInt(div.offsetLeft);
+                window.addEventListener('mousemove', divMove, true);
+            }
+
+            // Moves a shapes location.
+            function divMove(e){
+                var id = e.srcElement.id;
+                var y = e.clientY-offY;
+                var x = e.clientX-offX;
+
+                var shapeData = {
+                    id: id,
+                    y: y,
+                    x: x
+                };
+
+                jsonData = JSON.stringify(shapeData);
+
+                updateShape(shapeData);
+                websocket.send(jsonData);
+            }
+
+            // Update a shapes position.
+            function updateShape(shapeData) {
+                var id = shapeData.id;
+                var y = shapeData.y;
+                var x = shapeData.x;
+
+                var div = document.getElementById(id);
+                div.style.position = 'absolute';
+                div.style.top = (y) + 'px';
+                div.style.left = (x) + 'px';
+            }
+        </script>
+    </body>
+</html>

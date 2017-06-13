@@ -1,0 +1,13 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "O2sws+miRriMPObINsbwa0jnXxE=",
+			"path": "golang.org/x/net/websocket",
+			"revision": "4bb47a1098b37d69980d96237e2ae4ff56bb5a95",
+			"revisionTime": "2016-10-31T16:36:42Z"
+		}
+	],
+	"rootPath": "github.com/eturnhout/live-dragable-shapes"
+}
