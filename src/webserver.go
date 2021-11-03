@@ -11,11 +11,13 @@ import (
 )
 
 type Address struct {
-	Host string
+	Host     string
+	Protocol string
 }
 
 func index(rw http.ResponseWriter, r *http.Request) {
 	tpl, err := template.ParseFiles("public/index.html")
+	protocol := "ws"
 
 	if err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
@@ -23,7 +25,11 @@ func index(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tpl.Execute(rw, Address{Host: r.Host})
+	if r.TLS != nil {
+		protocol = "wss"
+	}
+
+	tpl.Execute(rw, Address{Host: r.Host, Protocol: protocol})
 }
 
 func main() {
