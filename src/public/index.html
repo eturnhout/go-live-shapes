@@ -76,10 +76,6 @@
 
                 websocket = new WebSocket(wsProtocol + location.host + "/stream");
 
-                websocket.onopen = (e => {
-                    console.log("connected");
-                });
-
                 websocket.onclose = (response => {
                     alert("Connection to the server closed.")
                 });
@@ -111,34 +107,40 @@
                 window.addEventListener('mousemove', divMove, true);
             }
 
-            // Moves a shapes location.
+            // Moves a shape's location
             function divMove(e){
                 var id = e.srcElement.id;
-                var y = e.clientY-offY;
-                var x = e.clientX-offX;
 
-                var shapeData = {
-                    id: id,
-                    y: y,
-                    x: x
-                };
+                if (id) {
+                    var y = e.clientY-offY;
+                    var x = e.clientX-offX;
 
-                jsonData = JSON.stringify(shapeData);
+                    var shapeData = {
+                        id: id,
+                        y: y,
+                        x: x
+                    };
 
-                updateShape(shapeData);
-                websocket.send(jsonData);
+                    jsonData = JSON.stringify(shapeData);
+
+                    updateShape(shapeData);
+                    websocket.send(jsonData);
+                }
             }
 
             // Update a shapes position.
             function updateShape(shapeData) {
                 var id = shapeData.id;
-                var y = shapeData.y;
-                var x = shapeData.x;
 
-                var div = document.getElementById(id);
-                div.style.position = 'absolute';
-                div.style.top = (y) + 'px';
-                div.style.left = (x) + 'px';
+                if (id) {
+                    var y = shapeData.y;
+                    var x = shapeData.x;
+                    var div = document.getElementById(id);
+
+                    div.style.position = 'absolute';
+                    div.style.top = (y) + 'px';
+                    div.style.left = (x) + 'px';
+                }
             }
         </script>
     </body>
