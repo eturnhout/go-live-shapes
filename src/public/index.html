@@ -67,7 +67,7 @@
 
             // Initialize the websocket and makes all shapes in the shapes array dragable.
             function initApp(shapes) {
-                websocket = new WebSocket("ws://localhost:8080/stream");
+                websocket = new WebSocket("ws://localhost:" + {{ .Port }} + "/stream");
 
                 websocket.onopen = (e => {
                     console.log("connected");
