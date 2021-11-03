@@ -10,11 +10,11 @@ import (
 	"golang.org/x/net/websocket"
 )
 
-type AddressHandler struct {
-	Port int
+type Address struct {
+	Host string
 }
 
-func (addr *AddressHandler) index(rw http.ResponseWriter, r *http.Request) {
+func index(rw http.ResponseWriter, r *http.Request) {
 	tpl, err := template.ParseFiles("public/index.html")
 
 	if err != nil {
@@ -23,17 +23,16 @@ func (addr *AddressHandler) index(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tpl.Execute(rw, addr)
+	tpl.Execute(rw, Address{Host: r.Host})
 }
 
 func main() {
 	portPtr := flag.Int("port", 8080, "The port number")
+	router := http.NewServeMux()
+
 	flag.Parse()
 
-	router := http.NewServeMux()
-	addrHandler := &AddressHandler{Port: *portPtr}
-
-	router.HandleFunc("/", addrHandler.index)
+	router.HandleFunc("/", index)
 	router.Handle("/stream", websocket.Handler(SocketServer))
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s%d", ":", *portPtr), router))
