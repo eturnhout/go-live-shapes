@@ -10,14 +10,8 @@ import (
 	"golang.org/x/net/websocket"
 )
 
-type Address struct {
-	Host     string
-	Protocol string
-}
-
 func index(rw http.ResponseWriter, r *http.Request) {
 	tpl, err := template.ParseFiles("public/index.html")
-	protocol := "ws"
 
 	if err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
@@ -25,11 +19,7 @@ func index(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.TLS != nil {
-		protocol = "wss"
-	}
-
-	tpl.Execute(rw, Address{Host: r.Host, Protocol: protocol})
+	tpl.Execute(rw, nil)
 }
 
 func main() {

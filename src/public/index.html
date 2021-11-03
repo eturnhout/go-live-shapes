@@ -67,7 +67,14 @@
 
             // Initialize the websocket and makes all shapes in the shapes array dragable.
             function initApp(shapes) {
-                websocket = new WebSocket({{ .Protocol }} + "://" + {{ .Host }} + "/stream");
+                let httpProtocol = location.protocol;
+                let wsProtocol = "ws://";
+
+                if (httpProtocol === "https") {
+                    wsProtocol = "wss://";
+                }
+
+                websocket = new WebSocket(wsProtocol + location.host + "/stream");
 
                 websocket.onopen = (e => {
                     console.log("connected");
