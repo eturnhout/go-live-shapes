@@ -100,27 +100,27 @@
             }
 
             // Gets the y & x offsets and adds the divMove event to the mousemove listener.
-            function mouseDown(e){
-                var div = document.getElementById(e.srcElement.id);
-                offY= e.clientY-parseInt(div.offsetTop);
-                offX= e.clientX-parseInt(div.offsetLeft);
+            function mouseDown(e) {
+                var div = document.getElementById(e.target.id);
+
+                offY = e.clientY-parseInt(div.offsetTop);
+                offX = e.clientX-parseInt(div.offsetLeft);
+
                 window.addEventListener('mousemove', divMove, true);
             }
 
             // Moves a shape's location
             function divMove(e){
-                var id = e.srcElement.id;
+                var id = e.target.id;
 
                 if (id) {
                     var y = e.clientY-offY;
                     var x = e.clientX-offX;
-
                     var shapeData = {
                         id: id,
                         y: y,
                         x: x
                     };
-
                     jsonData = JSON.stringify(shapeData);
 
                     updateShape(shapeData);
