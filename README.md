@@ -1,5 +1,5 @@
 # go-live-shapes
-Just playing with golang and websockets. The shapes are draggable and the state of these shapes are shared via websockets so all users see these changes. A demo can be viewed here https://go-live-shapes.herokuapp.com
+Just playing with golang and websockets. The shapes are draggable and the state of these shapes are shared via websockets so all users see these changes. A demo can be viewed here <a target="_blank" href="https://go-live-shapes.herokuapp.com">go-live-shapes.herokuapp.com</a>
 
 ## Start program
 ### Go build
