@@ -106,26 +106,29 @@
             }
 
             // Removes the moveShape event from the mousemove listener.
-            function releaseShape(event) {
-                window.removeEventListener('mousemove', moveShape);
+            function releaseShape(e) {
+                let shape = document.getElementById(e.srcElement.id);
+
+                shape.removeEventListener('mousemove', moveShape);
             }
 
             // Gets the y & x offsets and adds the moveShape event to the mousemove listener.
             function clickShape(e){
-                let div = document.getElementById(e.srcElement.id);
+                let shape = document.getElementById(e.srcElement.id);
                 let clientY = (e.targetTouches) ? e.targetTouches[0].clientY : e.clientY;
                 let clientX = (e.targetTouches) ? e.targetTouches[0].clientX : e.clientX;
 
-                offY = clientY - parseInt(div.offsetTop);
-                offX = clientX - parseInt(div.offsetLeft);
+                offY = clientY - parseInt(shape.offsetTop);
+                offX = clientX - parseInt(shape.offsetLeft);
 
-                window.addEventListener('mousemove', moveShape);
-                window.addEventListener('touchmove', moveShape);
+                shape.addEventListener('mousemove', moveShape);
+                shape.addEventListener('touchmove', moveShape);
             }
 
             // Moves a shape's location
             function moveShape(e){
                 let id = e.srcElement.id;
+                console.log(id);
                 let clientY = (e.targetTouches) ? e.targetTouches[0].clientY : e.clientY;
                 let clientX = (e.targetTouches) ? e.targetTouches[0].clientX : e.clientX;
                 let y = parseInt(clientY - offY);
